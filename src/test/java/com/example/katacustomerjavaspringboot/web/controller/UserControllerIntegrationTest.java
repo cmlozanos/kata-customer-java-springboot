@@ -5,6 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 
+import com.example.katacustomerjavaspringboot.domain.User;
+
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -15,9 +17,12 @@ public class UserControllerIntegrationTest {
 
 	@Test
 	void givenPostRequestWhenAddResourceThenShouldAddUser() {
+		final User user = User.builder().name("name").lastName("lastname").address("street").city("city")
+				.email("sample@email.com").build();
+
 		RestAssuredMockMvc
 				// given
-				.given().standaloneSetup(this.controller)
+				.given().standaloneSetup(this.controller).body(user)
 
 				// when
 				.when().post("api/users")
