@@ -108,4 +108,25 @@ public class UserControllerIntegrationTest {
 				.body("email", CoreMatchers.equalTo("sampleUpdate@email.com"));
 	}
 
+	@Test
+	void givenInvalidUserIdRequestWhenUpdateResourceThenShouldReturnNotFound() {
+
+		// given
+		final String uuid = UUID.randomUUID().toString();
+
+		final HashMap<String, String> params = new HashMap<String, String>();
+		params.put("uuid", uuid);
+
+		final User userUpdate = User.builder().name("nameUpdate").lastName("lastNameUpdate").address("streetUpdate")
+				.city("cityUpdate").email("sampleUpdate@email.com").build();
+
+		RestAssuredMockMvc.given().standaloneSetup(this.controller).body(userUpdate).contentType(ContentType.JSON)
+
+				// when
+				.when().put("api/users/{uuid}", params)
+
+				// then
+				.then().log().all().statusCode(HttpStatus.NOT_FOUND.value());
+	}
+
 }
