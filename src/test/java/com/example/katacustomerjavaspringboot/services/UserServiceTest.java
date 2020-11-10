@@ -66,7 +66,7 @@ public class UserServiceTest {
 	}
 
 	@Test
-	void givenInvalidUserIdWhenFindByIdThenShouldThrowException() {
+	void givenInvalidUserIdWhenFindByIdThenShouldReturnEmptyValue() {
 		// given
 		final UUID uuid = UUID.randomUUID();
 
@@ -102,5 +102,18 @@ public class UserServiceTest {
 		Assertions.assertEquals(mockUserToUpdate.getAddress(), userUpdated.get().getAddress());
 		Assertions.assertEquals(mockUserToUpdate.getCity(), userUpdated.get().getCity());
 		Assertions.assertEquals(mockUserToUpdate.getEmail(), userUpdated.get().getEmail());
+	}
+
+	@Test
+	void givenInvalidUserIdWhenUpdateByIdThenShouldReturnEmptyValue() {
+		// given
+		final UUID uuid = UUID.randomUUID();
+		final User user = User.builder().build();
+
+		// when
+		final Optional<User> userUpdateById = this.service.update(uuid, user);
+
+		// then
+		Assertions.assertFalse(userUpdateById.isPresent());
 	}
 }
