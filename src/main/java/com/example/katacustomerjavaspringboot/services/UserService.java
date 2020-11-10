@@ -23,4 +23,9 @@ public class UserService {
 		return this.repository.findById(uuid);
 	}
 
+	public Optional<User> update(final UUID uuid, final User user) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

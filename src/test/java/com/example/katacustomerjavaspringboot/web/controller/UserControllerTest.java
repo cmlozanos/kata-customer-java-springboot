@@ -62,4 +62,26 @@ public class UserControllerTest {
 		Assertions.assertEquals("city", responseEntity.getBody().getCity());
 		Assertions.assertEquals("sample@email.com", responseEntity.getBody().getEmail());
 	}
+
+	@Test
+	void givenUserIdAndUserToUpdateWhenUpdateThenShouldReturnUserUpdated() {
+		// given
+		final UUID uuid = UUID.randomUUID();
+
+		final User user = User.builder().id(uuid).name("nameUpdated").lastName("lastnameUpdated")
+				.address("streetUpdated").city("cityUpdated").email("sampleUpdated@email.com").build();
+		Mockito.when(this.service.update(uuid, user)).thenReturn(Optional.of(user));
+
+		// when
+		final ResponseEntity<User> responseEntity = this.controller.updateById(uuid, user);
+
+		// then
+		Assertions.assertEquals(HttpStatus.OK.value(), responseEntity.getStatusCodeValue());
+		Assertions.assertEquals(uuid, responseEntity.getBody().getId());
+		Assertions.assertEquals("nameUpdated", responseEntity.getBody().getName());
+		Assertions.assertEquals("lastnameUpdated", responseEntity.getBody().getLastName());
+		Assertions.assertEquals("streetUpdated", responseEntity.getBody().getAddress());
+		Assertions.assertEquals("cityUpdated", responseEntity.getBody().getCity());
+		Assertions.assertEquals("sampleUpdated@email.com", responseEntity.getBody().getEmail());
+	}
 }

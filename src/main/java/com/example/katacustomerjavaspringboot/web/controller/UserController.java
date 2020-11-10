@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -32,6 +33,12 @@ public class UserController {
 	@GetMapping("{uuid}")
 	public ResponseEntity<User> findById(@NotNull @PathVariable final UUID uuid) {
 		return ResponseEntity.of(this.service.findById(uuid));
+	}
+
+	@PutMapping("{uuid}")
+	public ResponseEntity<User> updateById(@NotNull @PathVariable final UUID uuid,
+			@NotNull @RequestBody final User user) {
+		return ResponseEntity.of(this.service.update(uuid, user));
 	}
 
 }
