@@ -1,5 +1,7 @@
 package com.example.katacustomerjavaspringboot.exceptions;
 
+import java.time.LocalDateTime;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -12,7 +14,8 @@ public class CustomResponseEntityExceptionHandler extends ResponseEntityExceptio
 
 	@ExceptionHandler(MaxSlogansPerUserException.class)
 	public ResponseEntity<Object> maxSlogansPerUserException() {
-		return ResponseEntity.badRequest().build();
+		return ResponseEntity.badRequest().body(ExceptionResponse.builder().timestamp(LocalDateTime.now())
+				.code(MaxSlogansPerUserException.CODE).message(MaxSlogansPerUserException.MESSAGE).build());
 	}
 
 }
