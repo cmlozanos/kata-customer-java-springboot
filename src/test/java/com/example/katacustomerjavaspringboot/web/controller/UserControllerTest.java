@@ -27,14 +27,6 @@ public class UserControllerTest {
 		// then
 		Assertions.assertEquals(HttpStatus.CREATED.value(), responseEntity.getStatusCodeValue());
 		Assertions.assertNotNull(responseEntity.getHeaders());
-		Assertions.assertEquals(responseEntity.getHeaders().get("Location").get(0),
-				"api/users/" + responseEntity.getBody().getId());
-		Assertions.assertNotNull(responseEntity.getBody());
-		Assertions.assertNotNull(responseEntity.getBody().getId());
-		Assertions.assertEquals(user.getName(), responseEntity.getBody().getName());
-		Assertions.assertEquals(user.getLastName(), responseEntity.getBody().getLastName());
-		Assertions.assertEquals(user.getAddress(), responseEntity.getBody().getAddress());
-		Assertions.assertEquals(user.getCity(), responseEntity.getBody().getCity());
-		Assertions.assertEquals(user.getEmail(), responseEntity.getBody().getEmail());
+		Assertions.assertTrue(responseEntity.getHeaders().get("Location").get(0).matches("^api/users/.*"));
 	}
 }
