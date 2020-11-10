@@ -1,13 +1,16 @@
 package com.example.katacustomerjavaspringboot.web.controller;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
+import org.hamcrest.CoreMatchers;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 
 import com.example.katacustomerjavaspringboot.domain.Slogan;
+import com.example.katacustomerjavaspringboot.exceptions.CustomResponseEntityExceptionHandler;
 
 import io.restassured.http.ContentType;
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
@@ -17,6 +20,9 @@ public class SloganControllerIntegrationTest {
 
 	@Autowired
 	SloganController controller;
+
+	@Autowired
+	CustomResponseEntityExceptionHandler handler;
 
 	@Test
 	void givenUserIdAndSloganAndLowerThan3SlogansWhenAddResourceThenShouldAddVerifyAmountAndAddSlogan() {
@@ -56,12 +62,14 @@ public class SloganControllerIntegrationTest {
 
 		RestAssuredMockMvc
 				// given
-				.given().standaloneSetup(this.controller).body(slogan).contentType(ContentType.JSON)
+				.given().standaloneSetup(this.controller, this.handler).body(slogan).contentType(ContentType.JSON)
 
 				// when
 				.when().post("api/slogans")
 
 				// then
-				.then().log().all().statusCode(HttpStatus.BAD_REQUEST.value());
+				.then().log().all().statusCode(HttpStatus.BAD_REQUEST.value())
+				.body("timestamp", CoreMatchers.any(LocalDateTime.class)).body("code", CoreMatchers.equalTo("001"))
+				.body("message", CoreMatchers.equalTo("Max slogans per user exceed. Only allow 3 per user"));
 	}
 }
