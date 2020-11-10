@@ -22,7 +22,7 @@ public class UserControllerIntegrationTest {
 
 	@Test
 	void givenPostRequestWhenAddResourceThenShouldAddUser() {
-		final User user = User.builder().name("name").lastName("lastname").address("street").city("city")
+		final User user = User.builder().name("name").lastName("lastName").address("street").city("city")
 				.email("sample@email.com").build();
 
 		RestAssuredMockMvc
@@ -58,7 +58,7 @@ public class UserControllerIntegrationTest {
 	void givenUserIdRequestWhenFindByIdResourceThenShouldReturnUser() {
 
 		// given
-		final User user = User.builder().name("name").lastName("lastname").address("street").city("city")
+		final User user = User.builder().name("name").lastName("lastName").address("street").city("city")
 				.email("sample@email.com").build();
 
 		final String location = RestAssuredMockMvc.given().standaloneSetup(this.controller).body(user)
@@ -83,7 +83,7 @@ public class UserControllerIntegrationTest {
 	void givenUserIdRequestWhenUpdateResourceThenShouldUpdateUserInformation() {
 
 		// given
-		final User user = User.builder().name("name").lastName("lastname").address("street").city("city")
+		final User user = User.builder().name("name").lastName("lastName").address("street").city("city")
 				.email("sample@email.com").build();
 
 		final String location = RestAssuredMockMvc.given().standaloneSetup(this.controller).body(user)
@@ -93,7 +93,7 @@ public class UserControllerIntegrationTest {
 		final HashMap<String, String> params = new HashMap<String, String>();
 		params.put("uuid", uuid);
 
-		final User userUpdate = User.builder().name("nameUpdate").lastName("lastnameUpdate").address("streetUpdate")
+		final User userUpdate = User.builder().name("nameUpdate").lastName("lastNameUpdate").address("streetUpdate")
 				.city("cityUpdate").email("sampleUpdate@email.com").build();
 
 		RestAssuredMockMvc.given().standaloneSetup(this.controller).body(userUpdate).contentType(ContentType.JSON)
