@@ -1,9 +1,11 @@
 package com.example.katacustomerjavaspringboot.web.controller;
 
 import java.net.URI;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,6 +24,12 @@ public class UserController {
 	public ResponseEntity<User> create(final User user) {
 		final User userCreated = this.service.create(user);
 		return ResponseEntity.created(URI.create("api/users/" + userCreated.getId())).build();
+	}
+
+	@GetMapping
+	public ResponseEntity<User> findById(final UUID uuid) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }
