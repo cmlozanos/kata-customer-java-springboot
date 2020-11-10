@@ -3,6 +3,8 @@ package com.example.katacustomerjavaspringboot.services;
 import java.util.Optional;
 import java.util.UUID;
 
+import javax.persistence.EntityNotFoundException;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -44,7 +46,7 @@ public class UserServiceTest {
 	}
 
 	@Test
-	void givenUserWhenFindByIdThenShouldReturnOk() {
+	void givenUserIdWhenFindByIdThenShouldReturnOk() {
 		// given
 		final UUID uuid = UUID.randomUUID();
 
@@ -62,5 +64,14 @@ public class UserServiceTest {
 		Assertions.assertEquals(mockUser.getAddress(), userFindById.getAddress());
 		Assertions.assertEquals(mockUser.getCity(), userFindById.getCity());
 		Assertions.assertEquals(mockUser.getEmail(), userFindById.getEmail());
+	}
+
+	@Test
+	void givenInvalidUserIdWhenFindByIdThenShouldThrowException() {
+		// given
+		final UUID uuid = UUID.randomUUID();
+
+		// when - then
+		Assertions.assertThrows(EntityNotFoundException.class, () -> this.service.findById(uuid));
 	}
 }
