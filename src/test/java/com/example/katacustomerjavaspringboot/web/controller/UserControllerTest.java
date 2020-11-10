@@ -25,7 +25,10 @@ public class UserControllerTest {
 		final ResponseEntity<User> responseEntity = this.controller.create(user);
 
 		// then
-		Assertions.assertEquals(HttpStatus.OK.value(), responseEntity.getStatusCodeValue());
+		Assertions.assertEquals(HttpStatus.CREATED.value(), responseEntity.getStatusCodeValue());
+		Assertions.assertNotNull(responseEntity.getHeaders());
+		Assertions.assertEquals(responseEntity.getHeaders().get("Location").get(0),
+				"api/users/" + responseEntity.getBody().getId());
 		Assertions.assertNotNull(responseEntity.getBody());
 		Assertions.assertNotNull(responseEntity.getBody().getId());
 		Assertions.assertEquals(user.getName(), responseEntity.getBody().getName());

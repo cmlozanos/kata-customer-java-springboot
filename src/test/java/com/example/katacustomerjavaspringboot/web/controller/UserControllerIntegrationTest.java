@@ -23,7 +23,7 @@ public class UserControllerIntegrationTest {
 				.when().post("api/users")
 
 				// then
-				.then().statusCode(HttpStatus.CREATED.value());
+				.then().log().all().statusCode(HttpStatus.CREATED.value());
 	}
 
 }
