@@ -34,4 +34,34 @@ public class SloganControllerIntegrationTest {
 				.then().log().all().statusCode(HttpStatus.CREATED.value());
 	}
 
+	@Test
+	void givenUserIdAndSloganAnd3SlogansWhenAddResourceThenShouldAddVerifyAmountAndReturnKOResponse() {
+		final UUID uuid = UUID.randomUUID();
+		final Slogan slogan = Slogan.builder().title("title").text("text").userId(uuid).build();
+
+		// Add first slogan
+		RestAssuredMockMvc.given().standaloneSetup(this.controller)
+				.body(Slogan.builder().title("title1").text("text").userId(uuid).build()).contentType(ContentType.JSON)
+				.post("api/slogans");
+
+		// Add second slogan
+		RestAssuredMockMvc.given().standaloneSetup(this.controller)
+				.body(Slogan.builder().title("title2").text("text").userId(uuid).build()).contentType(ContentType.JSON)
+				.post("api/slogans");
+
+		// Add third slogan
+		RestAssuredMockMvc.given().standaloneSetup(this.controller)
+				.body(Slogan.builder().title("title3").text("text").userId(uuid).build()).contentType(ContentType.JSON)
+				.post("api/slogans");
+
+		RestAssuredMockMvc
+				// given
+				.given().standaloneSetup(this.controller).body(slogan).contentType(ContentType.JSON)
+
+				// when
+				.when().post("api/slogans")
+
+				// then
+				.then().log().all().statusCode(HttpStatus.BAD_REQUEST.value());
+	}
 }
