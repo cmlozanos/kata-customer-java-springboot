@@ -28,8 +28,8 @@ public class UserController {
 
 	@GetMapping
 	public ResponseEntity<User> findById(final UUID uuid) {
-		// TODO Auto-generated method stub
-		return null;
+		final User user = this.service.findById(uuid);
+		return ResponseEntity.ok(user);
 	}
 
 }
