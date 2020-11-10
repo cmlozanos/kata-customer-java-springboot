@@ -3,8 +3,6 @@ package com.example.katacustomerjavaspringboot.services;
 import java.util.Optional;
 import java.util.UUID;
 
-import javax.persistence.EntityNotFoundException;
-
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -55,15 +53,16 @@ public class UserServiceTest {
 		Mockito.when(this.repository.findById(uuid)).thenReturn(Optional.of(mockUser));
 
 		// when
-		final User userFindById = this.service.findById(uuid);
+		final Optional<User> userFindById = this.service.findById(uuid);
 
 		// then
-		Assertions.assertEquals(uuid, userFindById.getId());
-		Assertions.assertEquals(mockUser.getName(), userFindById.getName());
-		Assertions.assertEquals(mockUser.getLastName(), userFindById.getLastName());
-		Assertions.assertEquals(mockUser.getAddress(), userFindById.getAddress());
-		Assertions.assertEquals(mockUser.getCity(), userFindById.getCity());
-		Assertions.assertEquals(mockUser.getEmail(), userFindById.getEmail());
+		Assertions.assertTrue(userFindById.isPresent());
+		Assertions.assertEquals(uuid, userFindById.get().getId());
+		Assertions.assertEquals(mockUser.getName(), userFindById.get().getName());
+		Assertions.assertEquals(mockUser.getLastName(), userFindById.get().getLastName());
+		Assertions.assertEquals(mockUser.getAddress(), userFindById.get().getAddress());
+		Assertions.assertEquals(mockUser.getCity(), userFindById.get().getCity());
+		Assertions.assertEquals(mockUser.getEmail(), userFindById.get().getEmail());
 	}
 
 	@Test
@@ -71,7 +70,10 @@ public class UserServiceTest {
 		// given
 		final UUID uuid = UUID.randomUUID();
 
-		// when - then
-		Assertions.assertThrows(EntityNotFoundException.class, () -> this.service.findById(uuid));
+		// when
+		final Optional<User> userFindById = this.service.findById(uuid);
+
+		// then
+		Assertions.assertFalse(userFindById.isPresent());
 	}
 }

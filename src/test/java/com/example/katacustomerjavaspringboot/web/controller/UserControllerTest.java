@@ -1,5 +1,6 @@
 package com.example.katacustomerjavaspringboot.web.controller;
 
+import java.util.Optional;
 import java.util.UUID;
 
 import org.junit.jupiter.api.Assertions;
@@ -46,8 +47,8 @@ public class UserControllerTest {
 		// given
 		final UUID uuid = UUID.randomUUID();
 
-		Mockito.when(this.service.findById(uuid)).thenReturn(User.builder().id(uuid).name("name").lastName("lastname")
-				.address("street").city("city").email("sample@email.com").build());
+		Mockito.when(this.service.findById(uuid)).thenReturn(Optional.of(User.builder().id(uuid).name("name")
+				.lastName("lastname").address("street").city("city").email("sample@email.com").build()));
 
 		// when
 		final ResponseEntity<User> responseEntity = this.controller.findById(uuid);

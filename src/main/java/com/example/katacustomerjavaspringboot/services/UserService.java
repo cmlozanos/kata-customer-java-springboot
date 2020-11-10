@@ -1,8 +1,7 @@
 package com.example.katacustomerjavaspringboot.services;
 
+import java.util.Optional;
 import java.util.UUID;
-
-import javax.persistence.EntityNotFoundException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,8 +19,8 @@ public class UserService {
 		return this.repository.save(user);
 	}
 
-	public User findById(final UUID uuid) {
-		return this.repository.findById(uuid).orElseThrow(EntityNotFoundException::new);
+	public Optional<User> findById(final UUID uuid) {
+		return this.repository.findById(uuid);
 	}
 
 }
