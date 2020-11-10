@@ -4,6 +4,8 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 import com.example.katacustomerjavaspringboot.domain.User;
 
@@ -20,14 +22,16 @@ public class UserControllerTest {
 				.email("sample@email.com").build();
 
 		// when
-		final User userCreated = this.controller.create(user);
+		final ResponseEntity<User> responseEntity = this.controller.create(user);
 
 		// then
-		Assertions.assertNotNull(user.getId());
-		Assertions.assertEquals(user.getName(), userCreated.getName());
-		Assertions.assertEquals(user.getLastName(), userCreated.getLastName());
-		Assertions.assertEquals(user.getAddress(), userCreated.getAddress());
-		Assertions.assertEquals(user.getCity(), userCreated.getCity());
-		Assertions.assertEquals(user.getEmail(), userCreated.getEmail());
+		Assertions.assertEquals(HttpStatus.OK.value(), responseEntity.getStatusCodeValue());
+		Assertions.assertNotNull(responseEntity.getBody());
+		Assertions.assertNotNull(responseEntity.getBody().getId());
+		Assertions.assertEquals(user.getName(), responseEntity.getBody().getName());
+		Assertions.assertEquals(user.getLastName(), responseEntity.getBody().getLastName());
+		Assertions.assertEquals(user.getAddress(), responseEntity.getBody().getAddress());
+		Assertions.assertEquals(user.getCity(), responseEntity.getBody().getCity());
+		Assertions.assertEquals(user.getEmail(), responseEntity.getBody().getEmail());
 	}
 }
