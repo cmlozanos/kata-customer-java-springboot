@@ -76,4 +76,31 @@ public class UserServiceTest {
 		// then
 		Assertions.assertFalse(userFindById.isPresent());
 	}
+
+	@Test
+	void givenUserIdAndUserWhenUpdateByIdThenShouldReturnOk() {
+		// given
+		final UUID uuid = UUID.randomUUID();
+
+		final User mockUser = User.builder().id(uuid).name("name").lastName("lastname").address("street").city("city")
+				.email("sample@email.com").build();
+		Mockito.when(this.repository.findById(uuid)).thenReturn(Optional.of(mockUser));
+
+		final User mockUserToUpdate = User.builder().id(uuid).name("nameUpdated").lastName("lastnameUpdated")
+				.address("streetUpdated").city("city").email("sampleUpdated@email.com").build();
+
+		Mockito.when(this.repository.save(mockUserToUpdate)).thenReturn(mockUserToUpdate);
+
+		// when
+		final Optional<User> userUpdated = this.service.update(uuid, mockUserToUpdate);
+
+		// then
+		Assertions.assertTrue(userUpdated.isPresent());
+		Assertions.assertEquals(uuid, userUpdated.get().getId());
+		Assertions.assertEquals(mockUserToUpdate.getName(), userUpdated.get().getName());
+		Assertions.assertEquals(mockUserToUpdate.getLastName(), userUpdated.get().getLastName());
+		Assertions.assertEquals(mockUserToUpdate.getAddress(), userUpdated.get().getAddress());
+		Assertions.assertEquals(mockUserToUpdate.getCity(), userUpdated.get().getCity());
+		Assertions.assertEquals(mockUserToUpdate.getEmail(), userUpdated.get().getEmail());
+	}
 }
