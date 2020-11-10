@@ -79,4 +79,33 @@ public class UserControllerIntegrationTest {
 				.body("city", CoreMatchers.equalTo("city")).body("email", CoreMatchers.equalTo("sample@email.com"));
 	}
 
+	@Test
+	void givenUserIdRequestWhenUpdateResourceThenShouldUpdateUserInformation() {
+
+		// given
+		final User user = User.builder().name("name").lastName("lastname").address("street").city("city")
+				.email("sample@email.com").build();
+
+		final String location = RestAssuredMockMvc.given().standaloneSetup(this.controller).body(user)
+				.contentType(ContentType.JSON).post("api/users").getHeader("Location");
+		final String uuid = location.replace("api/users/", "");
+
+		final HashMap<String, String> params = new HashMap<String, String>();
+		params.put("uuid", uuid);
+
+		final User userUpdate = User.builder().name("nameUpdate").lastName("lastnameUpdate").address("streetUpdate")
+				.city("cityUpdate").email("sampleUpdate@email.com").build();
+
+		RestAssuredMockMvc.given().standaloneSetup(this.controller).body(userUpdate).contentType(ContentType.JSON)
+
+				// when
+				.when().put("api/users/{uuid}", params)
+
+				// then
+				.then().log().all().statusCode(HttpStatus.OK.value()).body("name", CoreMatchers.equalTo("nameUpdate"))
+				.body("lastName", CoreMatchers.equalTo("lastNameUpdate"))
+				.body("address", CoreMatchers.equalTo("streetUpdate")).body("city", CoreMatchers.equalTo("cityUpdate"))
+				.body("email", CoreMatchers.equalTo("sampleUpdate@email.com"));
+	}
+
 }
