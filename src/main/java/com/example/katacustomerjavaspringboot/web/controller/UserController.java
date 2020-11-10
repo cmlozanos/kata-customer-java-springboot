@@ -1,5 +1,7 @@
 package com.example.katacustomerjavaspringboot.web.controller;
 
+import java.net.URI;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,7 +18,8 @@ public class UserController {
 	public UserService service;
 
 	public ResponseEntity<User> create(final User user) {
-		return ResponseEntity.ok().body(this.service.create(user));
+		final User userCreated = this.service.create(user);
+		return ResponseEntity.created(URI.create("api/users/" + userCreated.getId())).body(userCreated);
 	}
 
 }
