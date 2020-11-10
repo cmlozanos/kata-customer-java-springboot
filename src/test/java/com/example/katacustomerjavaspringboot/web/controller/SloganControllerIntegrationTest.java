@@ -1,22 +1,28 @@
 package com.example.katacustomerjavaspringboot.web.controller;
 
-import java.time.LocalDateTime;
 import java.util.UUID;
+import java.util.regex.Pattern;
 
 import org.hamcrest.CoreMatchers;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import com.example.katacustomerjavaspringboot.domain.Slogan;
 import com.example.katacustomerjavaspringboot.exceptions.CustomResponseEntityExceptionHandler;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import io.restassured.http.ContentType;
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class SloganControllerIntegrationTest {
+class SloganControllerIntegrationTest {
 
 	@Autowired
 	SloganController controller;
@@ -60,16 +66,25 @@ public class SloganControllerIntegrationTest {
 				.body(Slogan.builder().title("title3").text("text").userId(uuid).build()).contentType(ContentType.JSON)
 				.post("api/slogans");
 
+		final MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter = new MappingJackson2HttpMessageConverter();
+		mappingJackson2HttpMessageConverter.setObjectMapper(new ObjectMapper()
+				.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS).registerModule(new JavaTimeModule()));
+
+		final Pattern timestampPattern = Pattern.compile("(\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{3})");
+
 		RestAssuredMockMvc
 				// given
-				.given().standaloneSetup(this.controller, this.handler).body(slogan).contentType(ContentType.JSON)
+				.given()
+				.standaloneSetup(MockMvcBuilders.standaloneSetup(this.controller, this.handler)
+						.setMessageConverters(mappingJackson2HttpMessageConverter))
+				.body(slogan).contentType(ContentType.JSON)
 
 				// when
 				.when().post("api/slogans")
 
 				// then
 				.then().log().all().statusCode(HttpStatus.BAD_REQUEST.value())
-				.body("timestamp", CoreMatchers.any(LocalDateTime.class)).body("code", CoreMatchers.equalTo("001"))
+				.body("timestamp", Matchers.matchesPattern(timestampPattern)).body("code", CoreMatchers.equalTo("001"))
 				.body("message", CoreMatchers.equalTo("Max slogans per user exceed. Only allow 3 per user"));
 	}
 }

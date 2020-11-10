@@ -14,7 +14,7 @@ import com.example.katacustomerjavaspringboot.domain.User;
 import com.example.katacustomerjavaspringboot.domain.UserRepository;
 
 @SpringBootTest
-public class UserServiceTest {
+class UserServiceTest {
 
 	@InjectMocks
 	UserService service;

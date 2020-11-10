@@ -25,19 +25,18 @@ public class UserController {
 	public UserService service;
 
 	@PostMapping
-	public ResponseEntity<User> create(@NotNull @RequestBody final User user) {
+	public ResponseEntity<User> create(@RequestBody final User user) {
 		final User userCreated = this.service.create(user);
 		return ResponseEntity.created(URI.create("api/users/" + userCreated.getId())).build();
 	}
 
 	@GetMapping("{uuid}")
-	public ResponseEntity<User> findById(@NotNull @PathVariable final UUID uuid) {
+	public ResponseEntity<User> findById(@PathVariable final UUID uuid) {
 		return ResponseEntity.of(this.service.findById(uuid));
 	}
 
 	@PutMapping("{uuid}")
-	public ResponseEntity<User> updateById(@NotNull @PathVariable final UUID uuid,
-			@NotNull @RequestBody final User user) {
+	public ResponseEntity<User> updateById(@PathVariable final UUID uuid, @NotNull @RequestBody final User user) {
 		return ResponseEntity.of(this.service.update(uuid, user));
 	}
 

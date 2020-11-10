@@ -14,7 +14,7 @@ import com.example.katacustomerjavaspringboot.domain.SloganRepository;
 import com.example.katacustomerjavaspringboot.exceptions.MaxSlogansPerUserException;
 
 @SpringBootTest
-public class SloganServiceTest {
+class SloganServiceTest {
 
 	@InjectMocks
 	SloganService service;
