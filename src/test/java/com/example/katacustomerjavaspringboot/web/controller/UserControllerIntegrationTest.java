@@ -3,6 +3,7 @@ package com.example.katacustomerjavaspringboot.web.controller;
 import java.util.HashMap;
 import java.util.UUID;
 
+import org.hamcrest.CoreMatchers;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -36,7 +37,7 @@ public class UserControllerIntegrationTest {
 	}
 
 	@Test
-	void givenInvalidUserIdRequestWhenFindByIdResourceThenShouldReturnUser() {
+	void givenInvalidUserIdRequestWhenFindByIdResourceThenShouldReturnNotFound() {
 		final UUID uuid = UUID.randomUUID();
 
 		final HashMap<String, String> params = new HashMap<String, String>();
@@ -51,6 +52,31 @@ public class UserControllerIntegrationTest {
 
 				// then
 				.then().log().all().statusCode(HttpStatus.NOT_FOUND.value());
+	}
+
+	@Test
+	void givenUserIdRequestWhenFindByIdResourceThenShouldReturnUser() {
+
+		// given
+		final User user = User.builder().name("name").lastName("lastname").address("street").city("city")
+				.email("sample@email.com").build();
+
+		final String location = RestAssuredMockMvc.given().standaloneSetup(this.controller).body(user)
+				.contentType(ContentType.JSON).post("api/users").getHeader("Location");
+		final String uuid = location.replace("api/users/", "");
+
+		final HashMap<String, String> params = new HashMap<String, String>();
+		params.put("uuid", uuid);
+
+		RestAssuredMockMvc.given().standaloneSetup(this.controller)
+
+				// when
+				.when().get("api/users/{uuid}", params)
+
+				// then
+				.then().log().all().statusCode(HttpStatus.OK.value()).body("name", CoreMatchers.equalTo("name"))
+				.body("lastName", CoreMatchers.equalTo("lastName")).body("address", CoreMatchers.equalTo("street"))
+				.body("city", CoreMatchers.equalTo("city")).body("email", CoreMatchers.equalTo("sample@email.com"));
 	}
 
 }
