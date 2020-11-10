@@ -39,7 +39,7 @@ class SloganControllerTest {
 		// then
 		Assertions.assertEquals(HttpStatus.CREATED.value(), responseEntity.getStatusCodeValue());
 		Assertions.assertNotNull(responseEntity.getHeaders());
-		Assertions.assertEquals("api/users/" + uuid + "/slogans/" + sloganCreatedUUID.toString(),
+		Assertions.assertEquals("api/slogans/" + sloganCreatedUUID.toString(),
 				responseEntity.getHeaders().getLocation().toString());
 
 	}
