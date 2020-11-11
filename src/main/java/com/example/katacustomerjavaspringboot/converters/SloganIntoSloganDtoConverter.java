@@ -11,8 +11,8 @@ public class SloganIntoSloganDtoConverter implements Converter<Slogan, SloganDTO
 
 	@Override
 	public SloganDTO convert(final Slogan source) {
-		// TODO Auto-generated method stub
-		return null;
+		return SloganDTO.builder().id(source.getId()).title(source.getTitle()).text(source.getText())
+				.userId(source.getUser().getId()).build();
 	}
 
 }
