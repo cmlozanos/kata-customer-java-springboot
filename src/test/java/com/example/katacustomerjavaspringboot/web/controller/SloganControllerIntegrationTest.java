@@ -12,8 +12,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import com.example.katacustomerjavaspringboot.domain.Slogan;
 import com.example.katacustomerjavaspringboot.exceptions.CustomResponseEntityExceptionHandler;
+import com.example.katacustomerjavaspringboot.web.dto.SloganDTO;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -33,7 +33,7 @@ class SloganControllerIntegrationTest {
 	@Test
 	void givenUserIdAndSloganAndLowerThan3SlogansWhenAddResourceThenShouldAddVerifyAmountAndAddSlogan() {
 		final UUID uuid = UUID.randomUUID();
-		final Slogan slogan = Slogan.builder().title("title").text("text").userId(uuid).build();
+		final SloganDTO slogan = SloganDTO.builder().title("title").text("text").userId(uuid).build();
 
 		RestAssuredMockMvc
 				// given
@@ -49,22 +49,22 @@ class SloganControllerIntegrationTest {
 	@Test
 	void givenUserIdAndSloganAnd3SlogansWhenAddResourceThenShouldAddVerifyAmountAndReturnKOResponse() {
 		final UUID uuid = UUID.randomUUID();
-		final Slogan slogan = Slogan.builder().title("title").text("text").userId(uuid).build();
+		final SloganDTO slogan = SloganDTO.builder().title("title").text("text").userId(uuid).build();
 
 		// Add first slogan
 		RestAssuredMockMvc.given().standaloneSetup(this.controller)
-				.body(Slogan.builder().title("title1").text("text").userId(uuid).build()).contentType(ContentType.JSON)
-				.post("api/slogans");
+				.body(SloganDTO.builder().title("title1").text("text").userId(uuid).build())
+				.contentType(ContentType.JSON).post("api/slogans");
 
 		// Add second slogan
 		RestAssuredMockMvc.given().standaloneSetup(this.controller)
-				.body(Slogan.builder().title("title2").text("text").userId(uuid).build()).contentType(ContentType.JSON)
-				.post("api/slogans");
+				.body(SloganDTO.builder().title("title2").text("text").userId(uuid).build())
+				.contentType(ContentType.JSON).post("api/slogans");
 
 		// Add third slogan
 		RestAssuredMockMvc.given().standaloneSetup(this.controller)
-				.body(Slogan.builder().title("title3").text("text").userId(uuid).build()).contentType(ContentType.JSON)
-				.post("api/slogans");
+				.body(SloganDTO.builder().title("title3").text("text").userId(uuid).build())
+				.contentType(ContentType.JSON).post("api/slogans");
 
 		final MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter = new MappingJackson2HttpMessageConverter();
 		mappingJackson2HttpMessageConverter.setObjectMapper(new ObjectMapper()

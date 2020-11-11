@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 
 import com.example.katacustomerjavaspringboot.domain.Slogan;
 import com.example.katacustomerjavaspringboot.services.SloganService;
+import com.example.katacustomerjavaspringboot.web.dto.SloganDTO;
 
 @SpringBootTest
 class SloganControllerTest {
@@ -26,11 +27,11 @@ class SloganControllerTest {
 	void givenSloganAndUserWithLowerThan3SlogansWhenCreateThenShouldAddSlogan() {
 		// given
 		final UUID uuid = UUID.randomUUID();
-		final Slogan slogan = Slogan.builder().title("title").text("text").userId(uuid).build();
+		final SloganDTO slogan = SloganDTO.builder().title("title").text("text").userId(uuid).build();
 
 		final UUID sloganCreatedUUID = UUID.randomUUID();
-		final Slogan sloganCreated = Slogan.builder().id(sloganCreatedUUID).title("title").text("text").userId(uuid)
-				.build();
+		final SloganDTO sloganCreated = SloganDTO.builder().id(sloganCreatedUUID).title("title").text("text")
+				.userId(uuid).build();
 		Mockito.when(this.service.create(slogan)).thenReturn(sloganCreated);
 
 		// when
