@@ -5,11 +5,13 @@ import java.util.UUID;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import com.example.katacustomerjavaspringboot.domain.Slogan;
 import com.example.katacustomerjavaspringboot.web.dto.SloganDTO;
 
-public class SloganDTOIntoSloganConverterTest {
+@SpringBootTest
+class SloganDTOIntoSloganConverterTest {
 
 	@Autowired
 	SloganDTOIntoSloganConverter converter;
