@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.katacustomerjavaspringboot.domain.Slogan;
 import com.example.katacustomerjavaspringboot.services.SloganService;
 import com.example.katacustomerjavaspringboot.web.dto.SloganDTO;
 
@@ -21,7 +20,7 @@ public class SloganController {
 	SloganService service;
 
 	@PostMapping
-	public ResponseEntity<Slogan> create(@RequestBody final SloganDTO slogan) {
+	public ResponseEntity<SloganDTO> create(@RequestBody final SloganDTO slogan) {
 		final SloganDTO sloganCreated = this.service.create(slogan);
 		final String url = "api/slogans/" + sloganCreated.getId();
 		return ResponseEntity.created(URI.create(url)).build();

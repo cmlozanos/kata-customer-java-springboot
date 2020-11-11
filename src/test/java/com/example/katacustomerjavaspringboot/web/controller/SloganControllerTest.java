@@ -11,7 +11,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import com.example.katacustomerjavaspringboot.domain.Slogan;
 import com.example.katacustomerjavaspringboot.services.SloganService;
 import com.example.katacustomerjavaspringboot.web.dto.SloganDTO;
 
@@ -35,7 +34,7 @@ class SloganControllerTest {
 		Mockito.when(this.service.create(slogan)).thenReturn(sloganCreated);
 
 		// when
-		final ResponseEntity<Slogan> responseEntity = this.controller.create(slogan);
+		final ResponseEntity<SloganDTO> responseEntity = this.controller.create(slogan);
 
 		// then
 		Assertions.assertEquals(HttpStatus.CREATED.value(), responseEntity.getStatusCodeValue());
