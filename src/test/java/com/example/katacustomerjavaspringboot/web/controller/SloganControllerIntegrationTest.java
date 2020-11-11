@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import com.example.katacustomerjavaspringboot.domain.User;
 import com.example.katacustomerjavaspringboot.exceptions.CustomResponseEntityExceptionHandler;
 import com.example.katacustomerjavaspringboot.web.dto.SloganDTO;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -20,6 +21,8 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import io.restassured.http.ContentType;
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
+import io.restassured.module.mockmvc.response.MockMvcResponse;
+import io.restassured.response.ExtractableResponse;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class SloganControllerIntegrationTest {
@@ -28,11 +31,22 @@ class SloganControllerIntegrationTest {
 	SloganController controller;
 
 	@Autowired
+	UserController userController;
+
+	@Autowired
 	CustomResponseEntityExceptionHandler handler;
 
 	@Test
 	void givenUserIdAndSloganAndLowerThan3SlogansWhenAddResourceThenShouldAddVerifyAmountAndAddSlogan() {
-		final UUID uuid = UUID.randomUUID();
+
+		final User user = User.builder().name("name").lastName("lastName").address("street").city("city")
+				.email("sample@email.com").build();
+
+		final ExtractableResponse<MockMvcResponse> extract = RestAssuredMockMvc.given()
+				.standaloneSetup(this.userController).body(user).contentType(ContentType.JSON).post("api/users").then()
+				.log().all().statusCode(HttpStatus.CREATED.value()).extract();
+		final String userId = extract.header("Location").replace("api/users/", "");
+		final UUID uuid = UUID.fromString(userId);
 		final SloganDTO slogan = SloganDTO.builder().title("title").text("text").userId(uuid).build();
 
 		RestAssuredMockMvc
@@ -48,7 +62,15 @@ class SloganControllerIntegrationTest {
 
 	@Test
 	void givenUserIdAndSloganAnd3SlogansWhenAddResourceThenShouldAddVerifyAmountAndReturnKOResponse() {
-		final UUID uuid = UUID.randomUUID();
+		final User user = User.builder().name("name").lastName("lastName").address("street").city("city")
+				.email("sample@email.com").build();
+
+		final ExtractableResponse<MockMvcResponse> extract = RestAssuredMockMvc.given()
+				.standaloneSetup(this.userController).body(user).contentType(ContentType.JSON).post("api/users").then()
+				.log().all().statusCode(HttpStatus.CREATED.value()).extract();
+		final String userId = extract.header("Location").replace("api/users/", "");
+		final UUID uuid = UUID.fromString(userId);
+
 		final SloganDTO slogan = SloganDTO.builder().title("title").text("text").userId(uuid).build();
 
 		// Add first slogan
