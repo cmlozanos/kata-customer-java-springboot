@@ -42,15 +42,27 @@ class SloganControllerIntegrationTest {
 		final UUID uuid = UUID.randomUUID();
 		final SloganDTO slogan = SloganDTO.builder().title("title").text("text").userId(uuid).build();
 
+		final MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter = new MappingJackson2HttpMessageConverter();
+		mappingJackson2HttpMessageConverter.setObjectMapper(new ObjectMapper()
+				.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS).registerModule(new JavaTimeModule()));
+
+		final Pattern timestampPattern = Pattern
+				.compile("(\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.(\\d{2}|\\d{3}))");
+
 		RestAssuredMockMvc
 				// given
-				.given().standaloneSetup(this.controller).body(slogan).contentType(ContentType.JSON)
+				.given()
+				.standaloneSetup(MockMvcBuilders.standaloneSetup(this.controller, this.handler)
+						.setMessageConverters(mappingJackson2HttpMessageConverter))
+				.body(slogan).contentType(ContentType.JSON)
 
 				// when
 				.when().post("api/slogans")
 
 				// then
-				.then().log().all().statusCode(HttpStatus.CREATED.value());
+				.then().log().all().statusCode(HttpStatus.BAD_REQUEST.value())
+				.body("timestamp", Matchers.matchesPattern(timestampPattern)).body("code", CoreMatchers.equalTo("001"))
+				.body("message", CoreMatchers.equalTo("Max slogans per user exceed. Only allow 3 per user"));
 	}
 
 	@Test
