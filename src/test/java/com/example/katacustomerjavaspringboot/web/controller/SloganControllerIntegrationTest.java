@@ -37,6 +37,23 @@ class SloganControllerIntegrationTest {
 	CustomResponseEntityExceptionHandler handler;
 
 	@Test
+	void givenInvalidUserIdAndSloganWhenAddResourceThenShouldAddVerifyVerifyUserIdExists() {
+
+		final UUID uuid = UUID.randomUUID();
+		final SloganDTO slogan = SloganDTO.builder().title("title").text("text").userId(uuid).build();
+
+		RestAssuredMockMvc
+				// given
+				.given().standaloneSetup(this.controller).body(slogan).contentType(ContentType.JSON)
+
+				// when
+				.when().post("api/slogans")
+
+				// then
+				.then().log().all().statusCode(HttpStatus.CREATED.value());
+	}
+
+	@Test
 	void givenUserIdAndSloganAndLowerThan3SlogansWhenAddResourceThenShouldAddVerifyAmountAndAddSlogan() {
 
 		final User user = User.builder().name("name").lastName("lastName").address("street").city("city")
