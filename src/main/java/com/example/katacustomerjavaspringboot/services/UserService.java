@@ -28,8 +28,9 @@ public class UserService {
 		if (!findById.isPresent()) {
 			return Optional.empty();
 		}
-
-		return Optional.of(this.repository.save(user));
+		final User userToSave = User.builder().id(uuid).name(user.getName()).lastName(user.getLastName())
+				.address(user.getAddress()).city(user.getCity()).email(user.getEmail()).build();
+		return Optional.of(this.repository.save(userToSave));
 	}
 
 }

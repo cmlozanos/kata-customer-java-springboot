@@ -92,7 +92,8 @@ class SloganControllerIntegrationTest {
 		mappingJackson2HttpMessageConverter.setObjectMapper(new ObjectMapper()
 				.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS).registerModule(new JavaTimeModule()));
 
-		final Pattern timestampPattern = Pattern.compile("(\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{3})");
+		final Pattern timestampPattern = Pattern
+				.compile("(\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.(\\d{2}|\\d{3}))");
 
 		RestAssuredMockMvc
 				// given
