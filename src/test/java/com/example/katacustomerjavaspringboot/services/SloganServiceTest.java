@@ -1,5 +1,6 @@
 package com.example.katacustomerjavaspringboot.services;
 
+import java.util.Optional;
 import java.util.UUID;
 
 import org.junit.jupiter.api.Assertions;
@@ -15,6 +16,7 @@ import com.example.katacustomerjavaspringboot.domain.Slogan;
 import com.example.katacustomerjavaspringboot.domain.SloganRepository;
 import com.example.katacustomerjavaspringboot.domain.User;
 import com.example.katacustomerjavaspringboot.exceptions.MaxSlogansPerUserException;
+import com.example.katacustomerjavaspringboot.exceptions.UserNotFoundException;
 import com.example.katacustomerjavaspringboot.web.dto.SloganDTO;
 
 @SpringBootTest
@@ -25,6 +27,9 @@ class SloganServiceTest {
 
 	@Mock
 	SloganRepository repository;
+
+	@Mock
+	UserService userService;
 
 	@Mock
 	SloganDTOIntoSloganConverter dtoConverter;
@@ -74,6 +79,19 @@ class SloganServiceTest {
 
 		// when - then
 		Assertions.assertThrows(MaxSlogansPerUserException.class, () -> this.service.create(slogan));
+
+	}
+
+	@Test
+	void givenUserIdWhenCreateThenShouldVerifyExistsUser() {
+		// given
+		final UUID uuid = UUID.randomUUID();
+		final SloganDTO slogan = SloganDTO.builder().title("title").text("text").userId(uuid).build();
+
+		Mockito.when(this.userService.findById(uuid)).thenReturn(Optional.empty());
+
+		// when - then
+		Assertions.assertThrows(UserNotFoundException.class, () -> this.service.create(slogan));
 
 	}
 
