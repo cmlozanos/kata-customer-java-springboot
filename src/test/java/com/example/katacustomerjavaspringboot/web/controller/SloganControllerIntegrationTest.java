@@ -61,8 +61,8 @@ class SloganControllerIntegrationTest {
 
 				// then
 				.then().log().all().statusCode(HttpStatus.BAD_REQUEST.value())
-				.body("timestamp", Matchers.matchesPattern(timestampPattern)).body("code", CoreMatchers.equalTo("001"))
-				.body("message", CoreMatchers.equalTo("Max slogans per user exceed. Only allow 3 per user"));
+				.body("timestamp", Matchers.matchesPattern(timestampPattern)).body("code", CoreMatchers.equalTo("002"))
+				.body("message", CoreMatchers.equalTo("User not found"));
 	}
 
 	@Test
