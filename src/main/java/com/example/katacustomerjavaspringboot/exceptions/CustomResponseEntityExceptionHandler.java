@@ -14,8 +14,16 @@ public class CustomResponseEntityExceptionHandler extends ResponseEntityExceptio
 
 	@ExceptionHandler(MaxSlogansPerUserException.class)
 	public ResponseEntity<Object> maxSlogansPerUserException() {
-		return ResponseEntity.badRequest().body(ExceptionResponse.builder().timestamp(LocalDateTime.now())
-				.code(MaxSlogansPerUserException.CODE).message(MaxSlogansPerUserException.MESSAGE).build());
+		return this.buidResponse(MaxSlogansPerUserException.CODE, MaxSlogansPerUserException.MESSAGE);
 	}
 
+	@ExceptionHandler(UserNotFoundException.class)
+	public ResponseEntity<Object> userNotFoundException() {
+		return this.buidResponse(UserNotFoundException.CODE, UserNotFoundException.MESSAGE);
+	}
+
+	private ResponseEntity<Object> buidResponse(final String code, final String message) {
+		return ResponseEntity.badRequest()
+				.body(ExceptionResponse.builder().timestamp(LocalDateTime.now()).code(code).message(message).build());
+	}
 }
