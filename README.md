@@ -10,7 +10,13 @@
 * Every user should be able to be created,modified and recovered.
 * Every user should be able to create only 3 slogans
 
+### Swagger Documentation:
+
+* [Api Documentation at http://localhost:8080/swagger-ui/index.html](http://localhost:8080/swagger-ui/index.html)
+
 ### Database Information
+
+* [Link to console: http://localhost:8080/h2-console](http://localhost:8080/h2-console)
 
 Show information from tables: SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME IN ('SLOGAN', 'USER');
 
