@@ -43,6 +43,7 @@ class SloganServiceTest {
 		final UUID uuid = UUID.randomUUID();
 		final SloganDTO sloganDTO = SloganDTO.builder().title("title").text("text").userId(uuid).build();
 
+		Mockito.when(this.userService.findById(uuid)).thenReturn(Optional.of(User.builder().id(uuid).build()));
 		Mockito.when(this.repository.countByUserId(uuid)).thenReturn(0L);
 
 		final Slogan slogan = Slogan.builder().title("title").text("text").user(User.builder().id(uuid).build())
@@ -75,6 +76,7 @@ class SloganServiceTest {
 		final UUID uuid = UUID.randomUUID();
 		final SloganDTO slogan = SloganDTO.builder().title("title").text("text").userId(uuid).build();
 
+		Mockito.when(this.userService.findById(uuid)).thenReturn(Optional.of(User.builder().id(uuid).build()));
 		Mockito.when(this.repository.countByUserId(uuid)).thenReturn(3L);
 
 		// when - then
