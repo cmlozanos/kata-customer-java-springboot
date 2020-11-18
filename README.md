@@ -35,3 +35,7 @@ Show information from tables: SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABL
     "LAST_NAME" VARCHAR(255),
     "NAME" VARCHAR(255)
 )
+
+### Security Information
+
+This example applies Spring Security Configurations Basic, with a user and password specified at application.properties, this practice is not for business uses

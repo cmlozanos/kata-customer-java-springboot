@@ -1,132 +1,179 @@
 package com.example.katacustomerjavaspringboot.web.controller;
 
-import java.util.HashMap;
-import java.util.UUID;
-
+import com.example.katacustomerjavaspringboot.domain.User;
+import io.restassured.http.ContentType;
+import io.restassured.module.mockmvc.RestAssuredMockMvc;
 import org.hamcrest.CoreMatchers;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
+import org.springframework.test.web.servlet.MockMvc;
 
-import com.example.katacustomerjavaspringboot.domain.User;
-
-import io.restassured.http.ContentType;
-import io.restassured.module.mockmvc.RestAssuredMockMvc;
+import java.util.HashMap;
+import java.util.UUID;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@AutoConfigureMockMvc
 class UserControllerIntegrationTest {
 
-	@Autowired
-	UserController controller;
+    @Autowired
+    private MockMvc mockMvc;
 
-	@Test
-	void givenPostRequestWhenAddResourceThenShouldAddUser() {
-		final User user = User.builder().name("name").lastName("lastName").address("street").city("city")
-				.email("sample@email.com").build();
+    @Test
+    void givenRequestWithoutAuthenticationWhenAddResourceThenShouldReturnForbidden() {
+        final User user = User.builder().name("name").lastName("lastName").address("street").city("city")
+                .email("sample@email.com").build();
 
-		RestAssuredMockMvc
-				// given
-				.given().standaloneSetup(this.controller).body(user).contentType(ContentType.JSON)
+        RestAssuredMockMvc
+                // given
+                .given()
+                .mockMvc(mockMvc)
+                .postProcessors(SecurityMockMvcRequestPostProcessors.httpBasic("invalid", "invalidpwd"))
+                .body(user).contentType(ContentType.JSON)
 
-				// when
-				.when().post("api/users")
+                // when
+                .when().post("api/users")
 
-				// then
-				.then().log().all().statusCode(HttpStatus.CREATED.value());
-	}
+                // then
+                .then().log().all().statusCode(HttpStatus.UNAUTHORIZED.value());
+    }
 
-	@Test
-	void givenInvalidUserIdRequestWhenFindByIdResourceThenShouldReturnNotFound() {
-		final UUID uuid = UUID.randomUUID();
+    @Test
+    void givenPostRequestWhenAddResourceThenShouldAddUser() {
+        final User user = User.builder().name("name").lastName("lastName").address("street").city("city")
+                .email("sample@email.com").build();
 
-		final HashMap<String, String> params = new HashMap<String, String>();
-		params.put("uuid", uuid.toString());
+        RestAssuredMockMvc
+                // given
+                .given()
+                .mockMvc(mockMvc)
+                .postProcessors(SecurityMockMvcRequestPostProcessors.httpBasic("katauser", "katapassword"))
+                .body(user).contentType(ContentType.JSON)
 
-		RestAssuredMockMvc
-				// given
-				.given().standaloneSetup(this.controller)
+                // when
+                .when().post("api/users")
 
-				// when
-				.when().get("api/users/{uuid}", params)
+                // then
+                .then().log().all().statusCode(HttpStatus.CREATED.value());
+    }
 
-				// then
-				.then().log().all().statusCode(HttpStatus.NOT_FOUND.value());
-	}
+    @Test
+    void givenInvalidUserIdRequestWhenFindByIdResourceThenShouldReturnNotFound() {
+        final UUID uuid = UUID.randomUUID();
 
-	@Test
-	void givenUserIdRequestWhenFindByIdResourceThenShouldReturnUser() {
+        final HashMap<String, String> params = new HashMap<String, String>();
+        params.put("uuid", uuid.toString());
 
-		// given
-		final User user = User.builder().name("name").lastName("lastName").address("street").city("city")
-				.email("sample@email.com").build();
+        RestAssuredMockMvc
+                // given
+                .given()
+                .mockMvc(mockMvc)
+                .postProcessors(SecurityMockMvcRequestPostProcessors.httpBasic("katauser", "katapassword"))
 
-		final String location = RestAssuredMockMvc.given().standaloneSetup(this.controller).body(user)
-				.contentType(ContentType.JSON).post("api/users").getHeader("Location");
-		final String uuid = location.replace("api/users/", "");
+                // when
+                .when().get("api/users/{uuid}", params)
 
-		final HashMap<String, String> params = new HashMap<String, String>();
-		params.put("uuid", uuid);
+                // then
+                .then().log().all().statusCode(HttpStatus.NOT_FOUND.value());
+    }
 
-		RestAssuredMockMvc.given().standaloneSetup(this.controller)
+    @Test
+    void givenUserIdRequestWhenFindByIdResourceThenShouldReturnUser() {
 
-				// when
-				.when().get("api/users/{uuid}", params)
+        // given
+        final User user = User.builder().name("name").lastName("lastName").address("street").city("city")
+                .email("sample@email.com").build();
 
-				// then
-				.then().log().all().statusCode(HttpStatus.OK.value()).body("name", CoreMatchers.equalTo("name"))
-				.body("lastName", CoreMatchers.equalTo("lastName")).body("address", CoreMatchers.equalTo("street"))
-				.body("city", CoreMatchers.equalTo("city")).body("email", CoreMatchers.equalTo("sample@email.com"));
-	}
+        final String location = RestAssuredMockMvc
+                .given()
+                .mockMvc(mockMvc)
+                .postProcessors(SecurityMockMvcRequestPostProcessors.httpBasic("katauser", "katapassword"))
+                .body(user)
+                .contentType(ContentType.JSON).post("api/users")
+                .getHeader("Location");
+        final String uuid = location.replace("api/users/", "");
 
-	@Test
-	void givenUserIdRequestWhenUpdateResourceThenShouldUpdateUserInformation() {
+        final HashMap<String, String> params = new HashMap<String, String>();
+        params.put("uuid", uuid);
 
-		// given
-		final User user = User.builder().name("name").lastName("lastName").address("street").city("city")
-				.email("sample@email.com").build();
+        RestAssuredMockMvc
 
-		final String location = RestAssuredMockMvc.given().standaloneSetup(this.controller).body(user)
-				.contentType(ContentType.JSON).post("api/users").getHeader("Location");
-		final String uuid = location.replace("api/users/", "");
+                .given()
+                .mockMvc(mockMvc)
+                .postProcessors(SecurityMockMvcRequestPostProcessors.httpBasic("katauser", "katapassword"))
 
-		final HashMap<String, String> params = new HashMap<String, String>();
-		params.put("uuid", uuid);
 
-		final User userUpdate = User.builder().name("nameUpdate").lastName("lastNameUpdate").address("streetUpdate")
-				.city("cityUpdate").email("sampleUpdate@email.com").build();
+                // when
+                .when().get("api/users/{uuid}", params)
 
-		RestAssuredMockMvc.given().standaloneSetup(this.controller).body(userUpdate).contentType(ContentType.JSON)
+                // then
+                .then().log().all().statusCode(HttpStatus.OK.value()).body("name", CoreMatchers.equalTo("name"))
+                .body("lastName", CoreMatchers.equalTo("lastName")).body("address", CoreMatchers.equalTo("street"))
+                .body("city", CoreMatchers.equalTo("city")).body("email", CoreMatchers.equalTo("sample@email.com"));
+    }
 
-				// when
-				.when().put("api/users/{uuid}", params)
+    @Test
+    void givenUserIdRequestWhenUpdateResourceThenShouldUpdateUserInformation() {
 
-				// then
-				.then().log().all().statusCode(HttpStatus.OK.value()).body("name", CoreMatchers.equalTo("nameUpdate"))
-				.body("lastName", CoreMatchers.equalTo("lastNameUpdate"))
-				.body("address", CoreMatchers.equalTo("streetUpdate")).body("city", CoreMatchers.equalTo("cityUpdate"))
-				.body("email", CoreMatchers.equalTo("sampleUpdate@email.com"));
-	}
+        // given
+        final User user = User.builder().name("name").lastName("lastName").address("street").city("city")
+                .email("sample@email.com").build();
 
-	@Test
-	void givenInvalidUserIdRequestWhenUpdateResourceThenShouldReturnNotFound() {
+        final String location = RestAssuredMockMvc.given()
+                .mockMvc(mockMvc)
+                .postProcessors(SecurityMockMvcRequestPostProcessors.httpBasic("katauser", "katapassword"))
+                .body(user).contentType(ContentType.JSON).post("api/users")
+                .getHeader("Location");
+        final String uuid = location.replace("api/users/", "");
 
-		// given
-		final String uuid = UUID.randomUUID().toString();
+        final HashMap<String, String> params = new HashMap<String, String>();
+        params.put("uuid", uuid);
 
-		final HashMap<String, String> params = new HashMap<String, String>();
-		params.put("uuid", uuid);
+        final User userUpdate = User.builder().name("nameUpdate").lastName("lastNameUpdate").address("streetUpdate")
+                .city("cityUpdate").email("sampleUpdate@email.com").build();
 
-		final User userUpdate = User.builder().name("nameUpdate").lastName("lastNameUpdate").address("streetUpdate")
-				.city("cityUpdate").email("sampleUpdate@email.com").build();
+        RestAssuredMockMvc
+                .given()
+                .mockMvc(mockMvc)
+                .postProcessors(SecurityMockMvcRequestPostProcessors.httpBasic("katauser", "katapassword"))
 
-		RestAssuredMockMvc.given().standaloneSetup(this.controller).body(userUpdate).contentType(ContentType.JSON)
+                .body(userUpdate).contentType(ContentType.JSON)
 
-				// when
-				.when().put("api/users/{uuid}", params)
+                // when
+                .when().put("api/users/{uuid}", params)
 
-				// then
-				.then().log().all().statusCode(HttpStatus.NOT_FOUND.value());
-	}
+                // then
+                .then().log().all().statusCode(HttpStatus.OK.value()).body("name", CoreMatchers.equalTo("nameUpdate"))
+                .body("lastName", CoreMatchers.equalTo("lastNameUpdate"))
+                .body("address", CoreMatchers.equalTo("streetUpdate")).body("city", CoreMatchers.equalTo("cityUpdate"))
+                .body("email", CoreMatchers.equalTo("sampleUpdate@email.com"));
+    }
+
+    @Test
+    void givenInvalidUserIdRequestWhenUpdateResourceThenShouldReturnNotFound() {
+
+        // given
+        final String uuid = UUID.randomUUID().toString();
+
+        final HashMap<String, String> params = new HashMap<String, String>();
+        params.put("uuid", uuid);
+
+        final User userUpdate = User.builder().name("nameUpdate").lastName("lastNameUpdate").address("streetUpdate")
+                .city("cityUpdate").email("sampleUpdate@email.com").build();
+
+        RestAssuredMockMvc.given()
+                .mockMvc(mockMvc)
+                .postProcessors(SecurityMockMvcRequestPostProcessors.httpBasic("katauser", "katapassword"))
+                .body(userUpdate).contentType(ContentType.JSON)
+
+                // when
+                .when().put("api/users/{uuid}", params)
+
+                // then
+                .then().log().all().statusCode(HttpStatus.NOT_FOUND.value());
+    }
 
 }
