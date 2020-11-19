@@ -39,3 +39,9 @@ Show information from tables: SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABL
 ### Security Information
 
 This example applies Spring Security Configurations Basic, with a user and password specified at application.properties, this practice is not for business uses
+
+### Dockerize application
+
+##### Build docker image
+docker build -t example/kata-customer-java-springboot .
+docker run -p 8080:8080 example/kata-customer-java-springboot
