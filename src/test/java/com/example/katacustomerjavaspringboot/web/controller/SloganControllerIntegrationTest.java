@@ -26,6 +26,8 @@ import io.restassured.response.ExtractableResponse;
 @AutoConfigureMockMvc
 class SloganControllerIntegrationTest {
 
+	private static final String TIMESTAMP_PATTERN = "(\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.(\\d{2}|\\d{3}|\\d{4}|\\d{5|\\d{6}}))";
+
 	@Autowired
 	private MockMvc mockMvc;
 
@@ -38,8 +40,7 @@ class SloganControllerIntegrationTest {
 		final UUID uuid = UUID.randomUUID();
 		final SloganDTO slogan = SloganDTO.builder().title("title").text("text").userId(uuid).build();
 
-		final Pattern timestampPattern = Pattern
-				.compile("(\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.(\\d{2}|\\d{3}))");
+		final Pattern timestampPattern = Pattern.compile(SloganControllerIntegrationTest.TIMESTAMP_PATTERN);
 
 		RestAssuredMockMvc
 				// given
@@ -115,8 +116,7 @@ class SloganControllerIntegrationTest {
 				.body(SloganDTO.builder().title("title3").text("text").userId(uuid).build())
 				.contentType(ContentType.JSON).post("api/slogans");
 
-		final Pattern timestampPattern = Pattern
-				.compile("(\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.(\\d{2}|\\d{3}))");
+		final Pattern timestampPattern = Pattern.compile(SloganControllerIntegrationTest.TIMESTAMP_PATTERN);
 
 		RestAssuredMockMvc
 				// given
