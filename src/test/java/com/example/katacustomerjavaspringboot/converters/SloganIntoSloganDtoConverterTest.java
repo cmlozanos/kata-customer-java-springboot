@@ -12,7 +12,7 @@ import com.example.katacustomerjavaspringboot.domain.User;
 import com.example.katacustomerjavaspringboot.web.dto.SloganDTO;
 
 @SpringBootTest
-public class SloganIntoSloganDtoConverterTest {
+class SloganIntoSloganDtoConverterTest {
 
 	@Autowired
 	SloganIntoSloganDtoConverter converter;

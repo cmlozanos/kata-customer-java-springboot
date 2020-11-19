@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.katacustomerjavaspringboot.domain.User;
 import com.example.katacustomerjavaspringboot.services.UserService;
-import com.sun.istack.NotNull;
 
 @RestController
 @RequestMapping("api/users")
@@ -36,7 +35,7 @@ public class UserController {
 	}
 
 	@PutMapping("{uuid}")
-	public ResponseEntity<User> updateById(@PathVariable final UUID uuid, @NotNull @RequestBody final User user) {
+	public ResponseEntity<User> updateById(@PathVariable final UUID uuid, @RequestBody final User user) {
 		return ResponseEntity.of(this.service.update(uuid, user));
 	}
 
