@@ -45,3 +45,10 @@ This example applies Spring Security Configurations Basic, with a user "katauser
 ##### Build docker image
 * docker build -t cmlozanos/kata-customer-java-springboot .
 * docker run -p 8080:8080 cmlozanos/kata-customer-java-springboot
+
+
+### Sonar information
+
+[![SonarCloud](https://sonarcloud.io/images/project_badges/sonarcloud-black.svg)](https://sonarcloud.io/dashboard?id=cmlozanos_kata-customer-java-springboot)
+[![Bugs](https://sonarcloud.io/api/project_badges/measure?project=cmlozanos_kata-customer-java-springboot&metric=bugs)](https://sonarcloud.io/dashboard?id=cmlozanos_kata-customer-java-springboot)
+[![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=cmlozanos_kata-customer-java-springboot&metric=ncloc)](https://sonarcloud.io/dashboard?id=cmlozanos_kata-customer-java-springboot)
