@@ -26,7 +26,7 @@ import io.restassured.response.ExtractableResponse;
 @AutoConfigureMockMvc
 class SloganControllerIntegrationTest {
 
-	private static final String TIMESTAMP_PATTERN = "(\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.(\\d{2}|\\d{3}|\\d{4}|\\d{5|\\d{6}}))";
+	private static final String TIMESTAMP_PATTERN = "(\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.(\\d{2}|\\d{3}|\\d{4}|\\d{5}|\\d{6}))";
 
 	@Autowired
 	private MockMvc mockMvc;
