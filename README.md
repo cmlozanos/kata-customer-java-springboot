@@ -43,5 +43,5 @@ This example applies Spring Security Configurations Basic, with a user and passw
 ### Dockerize application
 
 ##### Build docker image
-docker build -t cmlozanos/kata-customer-java-springboot .
-docker run -p 8080:8080 cmlozanos/kata-customer-java-springboot
+* docker build -t cmlozanos/kata-customer-java-springboot .
+* docker run -p 8080:8080 cmlozanos/kata-customer-java-springboot
