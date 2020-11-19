@@ -38,7 +38,7 @@ Show information from tables: SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABL
 
 ### Security Information
 
-This example applies Spring Security Configurations Basic, with a user and password specified at application.properties, this practice is not for business uses
+This example applies Spring Security Configurations Basic, with a user "katauser" and password "katapassword", this practice is not for business uses
 
 ### Dockerize application
 

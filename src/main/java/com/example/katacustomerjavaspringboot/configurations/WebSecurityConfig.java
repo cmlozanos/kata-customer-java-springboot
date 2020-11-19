@@ -24,16 +24,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				.roles("USER", "ADMIN");
 	}
 
-/*
-	@Override
-	protected void configure(HttpSecurity http) throws Exception {
-		http.csrf().disable();
-		http.httpBasic();
-		http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-		http.authorizeRequests().anyRequest().authenticated();
-	}
-*/
-
 	@Override
 	protected void configure(final HttpSecurity http) throws Exception {
 		http.csrf().disable();
@@ -45,14 +35,4 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	public PasswordEncoder getPasswordEncoder() {
 		return new BCryptPasswordEncoder();
 	}
-/*
-	@Override
-	public void configure(WebSecurity web) throws Exception {
-		web.ignoring().antMatchers("/v2/api-docs",
-				"/configuration/ui",
-				"/swagger-resources",
-				"/configuration/security",
-				"/swagger-ui.html",
-				"/webjars/**");
-	}*/
 }
